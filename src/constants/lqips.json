@@ -33,7 +33,6 @@
   "src:content/posts/images/both-grid.avif": "d5d6d3e6e7e3d8d9e3",
   "src:content/posts/images/1.avif": "b5b0b3bcb6bbe0e0df",
   "src:content/posts/guide/cover.avif": "c8bca9dde6d2babfb5",
-  "src:content/posts/idc-edge-router-replacement/cover.webp": "81686cc3bbbda59796",
   "src:assets/images/professional/server-racks.webp": "81686cc3bbbda59796",
   "src:assets/images/professional/optic-module.webp": "c9ccc9415540445841",
   "src:assets/images/professional/network-operations.webp": "03264b07497b3f7db4",
@@ -70,5 +69,7 @@
   "src:content/posts/campus-office-network-deployment/assets/园区办公网三个亮点/亮点一-接口规划.png": "d6cfcdd2cbc8ecd5db",
   "src:content/posts/campus-office-network-deployment/assets/园区办公网三个亮点/亮点一-布线规划.png": "bdbfc1babcbedfc6de",
   "src:content/posts/campus-office-network-deployment/assets/园区办公网三个亮点/亮点一-IP与VLAN规划.png": "aecbc1a8c7bccce4e8",
-  "src:content/posts/campus-office-network-deployment/cover.webp": "03264b07497b3f7db4"
+  "src:content/posts/idc-edge-router-replacement/cover-edge-router.webp": "1f222824242714161b",
+  "src:content/posts/campus-office-network-deployment/cover-network-deployment.webp": "3d494f46586b213449",
+  "src:assets/images/professional/engineering-toolchain.webp": "091a230e232d1e252b"
 }

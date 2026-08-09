@@ -2,7 +2,7 @@
 title: "Campus Office Network Deployment Project Retrospective"
 published: 2026-08-08
 description: "A greenfield campus office network project covering business-path design, rack and cabling planning, resilient deployment, service validation, migration assurance, and post-launch troubleshooting."
-image: "./cover.webp"
+image: "./cover-network-deployment.webp"
 tags: [Campus Network, Network Design, Network Deployment, High Availability, 802.1X, SIP Troubleshooting]
 category: Project Experience
 lang: en

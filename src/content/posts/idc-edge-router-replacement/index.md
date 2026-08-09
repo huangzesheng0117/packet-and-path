@@ -2,7 +2,7 @@
 title: "IDC Edge Router Replacement Project: Post-Implementation Review"
 published: 2026-07-26
 description: "A core IDC dual-router egress replacement covering production baseline analysis, configuration cleanup, lab validation, a four-stage cutover, cross-team coordination, and rollback control."
-image: "./cover.webp"
+image: "./cover-edge-router.webp"
 tags: [IDC, BGP, Network Cutover, Router Replacement, H3C, IPv6]
 category: Project Experience
 lang: en

@@ -3,6 +3,7 @@ import { Picture } from "astro:assets";
 import networkImage from "@/assets/images/professional/network-operations.webp";
 import opticImage from "@/assets/images/professional/optic-module.webp";
 import serverImage from "@/assets/images/professional/server-racks.webp";
+import toolchainImage from "@/assets/images/professional/engineering-toolchain.webp";
 import { getSortedPosts } from "@/utils/content-utils";
 import { url } from "@/utils/url-utils";
 
@@ -181,7 +182,7 @@ const skills = [
 	<div class="data-band data-band--skills">
 		<Picture
 			class="data-band__image"
-			src={networkImage}
+			src={toolchainImage}
 			alt=""
 			formats={["avif", "webp"]}
 			widths={[520, 860]}

@@ -189,13 +189,14 @@ RSS 与 Sitemap 文件仍由构建流程生成，只是页脚不再显示入口�
 
 专业图片均下载到本地并由 Astro 生成响应式格式，避免依赖远程图片服务：
 
-- `network-operations.webp`：首页 Hero 和部分能力矩阵背景。
-- `optic-module.webp`：基础设施区域。
-- `server-racks.webp`：文章档案区域。
-- `src/content/posts/idc-edge-router-replacement/cover.webp`：文章封面衍生图。
+- `network-operations.webp`：首页“生产网络笔记”区域。
+- `server-racks.webp`：首页“文章档案”区域。
+- `optic-module.webp`：首页“网络技术栈”区域。
+- `engineering-toolchain.webp`：首页“工程工具链”区域。
+- `src/content/posts/campus-office-network-deployment/cover-network-deployment.webp`：园区办公网项目文章封面。
+- `src/content/posts/idc-edge-router-replacement/cover-edge-router.webp`：IDC 路由器替换项目文章封面。
 
-具体来源、摄影师和 Pexels License 链接见 `docs/IMAGE_SOURCES.md`。替换图片时必须
-同步更新该文件，并保留来源和授权记录。
+具体来源、摄影师、生成方式和 Pexels License 链接见 `docs/IMAGE_SOURCES.md`。替换图片时必须同步更新该文件，并保留来源和授权记录，同时遵守 `docs/IMAGE_ASSET_GUIDELINES.md` 中“首页背景与文章封面不得复用”的规则。
 
 ## 10. 响应式与无障碍
 
