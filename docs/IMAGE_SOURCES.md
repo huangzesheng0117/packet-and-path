@@ -17,3 +17,18 @@ License reference: [Pexels License](https://www.pexels.com/license/).
 The three generated originals were created specifically for this site. Their prompts intentionally use different subjects, compositions, and lighting so they cannot be mistaken for one another or for the three Pexels homepage assets. The untouched PNG originals remain in Codex generated-image storage; the repository contains optimized WebP derivatives.
 
 All active mappings and the no-reuse verification process are documented in `docs/IMAGE_ASSET_GUIDELINES.md`.
+
+## Incident article figures
+
+The following inline figures belong exclusively to the bilingual F5 BIG-IP DNS incident retrospective. They are not used as homepage backgrounds or article covers.
+
+| Local asset | Source | Creator / rights holder |
+| --- | --- | --- |
+| `src/content/posts/f5-sh16-dns-force-offline-incident/assets/grafana-response-ratio.png` | Sanitized Grafana export from the incident review | ZeSheng Huang |
+| `src/content/posts/f5-sh16-dns-force-offline-incident/assets/simplified-architecture.png` | Sanitized topology redrawn for the incident review | ZeSheng Huang |
+| `src/content/posts/f5-sh16-dns-force-offline-incident/assets/anycast-dns-architecture.png` | Sanitized Anycast DNS architecture redrawn for the incident review | ZeSheng Huang |
+| `src/content/posts/f5-sh16-dns-force-offline-incident/assets/myf5-force-offline-big3d.png` | [F5 MyF5 article K15122](https://my.f5.com/manage/s/article/K15122), excerpted as supporting product documentation | F5, Inc. |
+| `src/content/posts/f5-sh16-dns-force-offline-incident/assets/fault-mechanism.png` | Original failure-mechanism diagram created for the incident review | ZeSheng Huang |
+| `src/content/posts/f5-sh16-dns-force-offline-incident/assets/investigation-path.png` | Original investigation-path diagram created for the incident review | ZeSheng Huang |
+
+The English locale renders English-native Mermaid replacements for figures containing Chinese labels and reuses the already-English MyF5 excerpt under `src/content-locales/f5-sh16-dns-force-offline-incident/assets/`.

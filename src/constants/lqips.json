@@ -71,5 +71,12 @@
   "src:content/posts/campus-office-network-deployment/assets/园区办公网三个亮点/亮点一-IP与VLAN规划.png": "aecbc1a8c7bccce4e8",
   "src:content/posts/idc-edge-router-replacement/cover-edge-router.webp": "1f222824242714161b",
   "src:content/posts/campus-office-network-deployment/cover-network-deployment.webp": "3d494f46586b213449",
-  "src:assets/images/professional/engineering-toolchain.webp": "091a230e232d1e252b"
+  "src:assets/images/professional/engineering-toolchain.webp": "091a230e232d1e252b",
+  "src:content-locales/f5-sh16-dns-force-offline-incident/assets/myf5-force-offline-big3d.png": "f1f1f1fbfbfbf8faf9",
+  "src:content/posts/f5-sh16-dns-force-offline-incident/assets/simplified-architecture.png": "f7f7f7f3f2f1f6f8f2",
+  "src:content/posts/f5-sh16-dns-force-offline-incident/assets/myf5-force-offline-big3d.png": "f1f1f1fbfbfbf8faf9",
+  "src:content/posts/f5-sh16-dns-force-offline-incident/assets/investigation-path.png": "eff1ebeff0eaebede3",
+  "src:content/posts/f5-sh16-dns-force-offline-incident/assets/grafana-response-ratio.png": "3d3d32383930414133",
+  "src:content/posts/f5-sh16-dns-force-offline-incident/assets/fault-mechanism.png": "f4efeceeece9f3f1ec",
+  "src:content/posts/f5-sh16-dns-force-offline-incident/assets/anycast-dns-architecture.png": "f3f3f2fdfdfcfaf9f6"
 }

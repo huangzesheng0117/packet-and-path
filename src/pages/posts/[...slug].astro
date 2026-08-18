@@ -37,6 +37,10 @@ import {
 	Content as CampusEnglishArticleContent,
 	getHeadings as getCampusEnglishArticleHeadings,
 } from "@/content-locales/campus-office-network-deployment/index.en.md";
+import {
+	Content as F5DnsIncidentEnglishArticleContent,
+	getHeadings as getF5DnsIncidentEnglishArticleHeadings,
+} from "@/content-locales/f5-sh16-dns-force-offline-incident/index.en.md";
 
 export async function getStaticPaths() {
 	const blogEntries = await getSortedPosts();
@@ -60,6 +64,10 @@ const bilingualArticles = {
 	"campus-office-network-deployment": {
 		Content: CampusEnglishArticleContent,
 		getHeadings: getCampusEnglishArticleHeadings,
+	},
+	"f5-sh16-dns-force-offline-incident": {
+		Content: F5DnsIncidentEnglishArticleContent,
+		getHeadings: getF5DnsIncidentEnglishArticleHeadings,
 	},
 };
 const bilingualArticle =
