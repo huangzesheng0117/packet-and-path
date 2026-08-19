@@ -78,5 +78,11 @@
   "src:content/posts/f5-sh16-dns-force-offline-incident/assets/investigation-path.png": "eff1ebeff0eaebede3",
   "src:content/posts/f5-sh16-dns-force-offline-incident/assets/grafana-response-ratio.png": "3d3d32383930414133",
   "src:content/posts/f5-sh16-dns-force-offline-incident/assets/fault-mechanism.png": "f4efeceeece9f3f1ec",
-  "src:content/posts/f5-sh16-dns-force-offline-incident/assets/anycast-dns-architecture.png": "f3f3f2fdfdfcfaf9f6"
+  "src:content/posts/f5-sh16-dns-force-offline-incident/assets/anycast-dns-architecture.png": "f3f3f2fdfdfcfaf9f6",
+  "src:content-locales/f5-sh16-dns-force-offline-incident/assets/simplified-architecture.png": "f4f3f4f0efeff6f7f2",
+  "src:content-locales/f5-sh16-dns-force-offline-incident/assets/investigation-path.png": "ebebe5eaeae4e6e8de",
+  "src:content-locales/f5-sh16-dns-force-offline-incident/assets/grafana-response-ratio.png": "3e3e3239392f464536",
+  "src:content-locales/f5-sh16-dns-force-offline-incident/assets/fault-mechanism.png": "efeae6ecebe7f0eeea",
+  "src:content-locales/f5-sh16-dns-force-offline-incident/assets/anycast-dns-architecture.png": "eeedecf8f9f8f8f7f5",
+  "src:content/posts/f5-sh16-dns-force-offline-incident/cover-dns-incident.webp": "446965638b8f44605a"
 }

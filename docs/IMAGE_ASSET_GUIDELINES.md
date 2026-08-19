@@ -22,6 +22,7 @@ New article covers should reflect the subject of that specific article. New home
 | Homepage — Engineering Toolchain | `src/assets/images/professional/engineering-toolchain.webp` |
 | Article — Campus Office Network Deployment | `src/content/posts/campus-office-network-deployment/cover-network-deployment.webp` |
 | Article — IDC Edge Router Replacement | `src/content/posts/idc-edge-router-replacement/cover-edge-router.webp` |
+| Article — F5 BIG-IP DNS Incident Retrospective | `src/content/posts/f5-sh16-dns-force-offline-incident/cover-dns-incident.webp` |
 
 ## Pre-publish verification
 

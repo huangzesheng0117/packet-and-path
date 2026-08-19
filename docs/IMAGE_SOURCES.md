@@ -11,10 +11,11 @@ as WebP files. The source pages were marked as free to use when downloaded.
 | `src/assets/images/professional/engineering-toolchain.webp` | Original AI-generated network automation workstation scene | OpenAI image generation |
 | `src/content/posts/campus-office-network-deployment/cover-network-deployment.webp` | Original AI-generated campus wiring-closet deployment scene | OpenAI image generation |
 | `src/content/posts/idc-edge-router-replacement/cover-edge-router.webp` | Original AI-generated redundant carrier-router commissioning scene | OpenAI image generation |
+| `src/content/posts/f5-sh16-dns-force-offline-incident/cover-dns-incident.webp` | [Close-up of Ethernet cables connected to network equipment](https://www.pexels.com/photo/close-up-photo-of-ethernet-cables-on-network-switch-6466143/) | Sergei Starostin |
 
 License reference: [Pexels License](https://www.pexels.com/license/).
 
-The three generated originals were created specifically for this site. Their prompts intentionally use different subjects, compositions, and lighting so they cannot be mistaken for one another or for the three Pexels homepage assets. The untouched PNG originals remain in Codex generated-image storage; the repository contains optimized WebP derivatives.
+The three generated originals were created specifically for this site. Their prompts intentionally use different subjects, compositions, and lighting so they cannot be mistaken for one another or for the four Pexels-sourced assets. The untouched PNG originals remain in Codex generated-image storage; the repository contains optimized WebP derivatives.
 
 All active mappings and the no-reuse verification process are documented in `docs/IMAGE_ASSET_GUIDELINES.md`.
 
@@ -31,4 +32,4 @@ The following inline figures belong exclusively to the bilingual F5 BIG-IP DNS i
 | `src/content/posts/f5-sh16-dns-force-offline-incident/assets/fault-mechanism.png` | Original failure-mechanism diagram created for the incident review | ZeSheng Huang |
 | `src/content/posts/f5-sh16-dns-force-offline-incident/assets/investigation-path.png` | Original investigation-path diagram created for the incident review | ZeSheng Huang |
 
-The English locale renders English-native Mermaid replacements for figures containing Chinese labels and reuses the already-English MyF5 excerpt under `src/content-locales/f5-sh16-dns-force-offline-incident/assets/`.
+The English locale uses six PNG figures under `src/content-locales/f5-sh16-dns-force-offline-incident/assets/`. Five are English-localized versions of the corresponding sanitized incident-review figures; the already-English MyF5 excerpt is reused without content changes. The English article no longer depends on Mermaid replacements for these figures.

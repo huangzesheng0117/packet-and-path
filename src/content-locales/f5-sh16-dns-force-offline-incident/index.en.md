@@ -15,18 +15,7 @@ Grafana showed exactly the opposite. During the maintenance window, the internal
 
 **Figure 1. The DNS response ratio dropped twice during the incident window**
 
-> **Translated chart text**
->
-> Panel title: **Internal DNS Response Ratio**
->
-> | Series | Maximum |
-> |---|---:|
-> | `10.187.251.162` — Global Response Ratio | 1 |
-> | `10.192.251.162` — Global Response Ratio | 0.997 |
-> | `10.187.251.162` — Preferred Response Ratio | 1 |
-> | `10.192.251.162` — Preferred Response Ratio | 0.997 |
->
-> The chart covers approximately 21:54–22:48. It shows a brief first dip around 22:16–22:17 and a deeper, sustained second dip around 22:22–22:26, followed by recovery at approximately 22:27.
+![Figure 1: Internal DNS response ratio during the incident window](./assets/grafana-response-ratio.png)
 
 **This was the question that launched the entire investigation:**
 
@@ -57,74 +46,13 @@ All four appliances also participate in the same GTM/DNS environment. This inclu
 
 **Figure 2. Minimum production topology directly relevant to the incident**
 
-```mermaid
-flowchart LR
-    R["DCI Ring / Inter-Data-Center Business Routes<br/>SH8 ↔ SH16"]
-    A["Anycast DNS Service Address<br/>192.168.4.254:53<br/>Advertised by the local Active appliance at each site"]
-    G["GTM Sync Group / iQuery<br/>Four-appliance cross-site communication<br/>TCP 4353"]
-
-    subgraph SH8["SH8 Data Center"]
-        S81["SH8-G03-WE-DNS01<br/>Management: 10.192.251.161<br/>DCI Self IP: 192.168.4.18<br/>Standby"]
-        S82["SH8-H03-WE-DNS02<br/>Management: 10.192.251.162<br/>DCI Self IP: 192.168.4.22<br/>Active / Listener"]
-        D8["SH8 DCI-BN<br/>OSPF Process 2"]
-        S81 -->|OSPF P2P| D8
-        S82 -->|OSPF P2P| D8
-    end
-
-    subgraph SH16["SH16 Data Center"]
-        S161["SH16-G03-WE-DNS01<br/>Management: 10.187.251.161<br/>DCI Self IP: 192.168.4.46<br/>Standby — appliance under maintenance"]
-        S162["SH16-H03-WE-DNS02<br/>Management: 10.187.251.162<br/>DCI Self IP: 192.168.4.50<br/>Active / Listener"]
-        D16["SH16 DCI-BN<br/>OSPF Process 2"]
-        S161 -->|OSPF P2P / Po10| D16
-        S162 -->|OSPF P2P| D16
-    end
-
-    D8 <-->|Business subnet / default route| R
-    D16 <-->|Business subnet / default route| R
-    S82 -->|Active advertisement| A
-    S162 -->|Active advertisement| A
-    S81 -.-> G
-    S82 -.-> G
-    S161 -.-> G
-    S162 -.-> G
-```
+![Figure 2: Minimum production topology directly relevant to the incident](./assets/simplified-architecture.png)
 
 WE-DNS connects at Layer 3 through the DCI-BN devices. OSPF runs between WE-DNS and DCI-BN, while a DCI ring carries the business subnets and DNS-related routes between the two data centers.
 
 **Figure 3. Redrawn and sanitized Anycast DNS access architecture**
 
-```mermaid
-flowchart LR
-    ANY["Anycast DNS<br/>192.168.4.254:53"]
-    RING["DCI Ring<br/>Inter-Data-Center Business Routes"]
-    SYNC["GTM Sync / iQuery<br/>Four-node interconnection over TCP 4353"]
-
-    subgraph SH16["SH16 Data Center"]
-        A16["SH16-H03-WE-DNS02<br/>10.187.251.162 / 192.168.4.50<br/>Active / Listener"]
-        B16["SH16-G03-WE-DNS01<br/>10.187.251.161 / 192.168.4.46<br/>Standby / Appliance Under Maintenance"]
-        D16["SH16 DCI-BN<br/>OSPF Process 2"]
-        A16 -->|OSPF P2P| D16
-        B16 -->|OSPF P2P| D16
-    end
-
-    subgraph SH8["SH8 Data Center"]
-        B8["SH8-G03-WE-DNS01<br/>10.192.251.161 / 192.168.4.18<br/>Standby"]
-        A8["SH8-H03-WE-DNS02<br/>10.192.251.162 / 192.168.4.22<br/>Active / Listener"]
-        D8["SH8 DCI-BN<br/>OSPF Process 2"]
-        B8 -->|OSPF P2P| D8
-        A8 -->|OSPF P2P| D8
-    end
-
-    A16 -->|Active advertisement| ANY
-    A8 -->|Active advertisement| ANY
-    D16 -->|Business route| RING
-    D8 -->|Business route| RING
-    RING -.->|Cross-data-center fallback path| ANY
-    A16 -. iQuery .-> SYNC
-    B16 -. iQuery .-> SYNC
-    A8 -. iQuery .-> SYNC
-    B8 -. iQuery .-> SYNC
-```
+![Figure 3: Redrawn and sanitized Anycast DNS access architecture](./assets/anycast-dns-architecture.png)
 
 The key design points are as follows:
 
@@ -226,7 +154,7 @@ In the **same second**, GTM monitors began reporting:
 Jun  5 22:15:06 ... Monitor instance /Common/tcp_half_9818
 10.186.200.88:0 UP --> DOWN from 192.168.4.46 (no route)
 
-Jun  5 22:15:06 ... VS vs_7core.example.internal_10.186.200.88
+Jun  5 22:15:06 ... VS vs_7core.cashbag.trade_10.186.200.88
 state change green --> red
 ( Monitor /Common/tcp_half_9818 from 192.168.4.46 : no route)
 ```
@@ -320,10 +248,10 @@ We therefore went beyond the site configuration and correlated the official prod
 
 We focused on the following MyF5 articles:
 
-- [`K00409413`](https://my.f5.com/manage/s/article/K00409413): A BIG-IP system in a disabled/offline state does not advertise routes through advanced dynamic-routing protocols.
-- [`K15122`](https://my.f5.com/manage/s/article/K15122): Force Offline does not automatically stop BIG-IP DNS metrics collection or monitoring functions.
-- [`K11661449`](https://my.f5.com/manage/s/article/K11661449): BIG-IP DNS software upgrade and maintenance procedures address stopping `big3d` and `gtmd` separately.
-- [`K39164203`](https://my.f5.com/manage/s/article/K39164203): Dynamic routing is tied to the state of `tmrouted/imish`.
+- `K00409413`: A BIG-IP system in a disabled/offline state does not advertise routes through advanced dynamic-routing protocols.
+- `K15122`: Force Offline does not automatically stop BIG-IP DNS metrics collection or monitoring functions.
+- `K11661449`: BIG-IP DNS software upgrade and maintenance procedures address stopping `big3d` and `gtmd` separately.
+- `K39164203`: Dynamic routing is tied to the state of `tmrouted/imish`.
 
 The critical point was that the official Force Offline procedure explicitly treats BIG-IP DNS monitoring as a separate concern: to stop monitoring, `big3d` must be stopped independently.
 
@@ -363,25 +291,7 @@ This was the **asymmetric perspective / partial-failure state** later described 
 
 **Figure 5. Failure mechanism: how forcing a Standby DNS appliance offline contaminated GTM health-check state**
 
-```mermaid
-flowchart TD
-    A["22:15:06<br/>Force Offline executed on SH16-DNS01"]
-    B["Path A: Dynamic routing is affected<br/>OSPF / imish default route progressively fails"]
-    C["Path B: GTM monitoring plane remains online<br/>gtmd / big3d continue running"]
-    D["22:15:47<br/>Cisco sees OSPF neighbor 192.168.4.46 go DOWN after DEADTIME"]
-    E["Auto Last Hop can still return iQuery traffic<br/>Other DNS nodes can still 'see' 192.168.4.46"]
-    F["Asymmetric / partial-failure state<br/>Control-plane communication works, but the local node lacks an outbound route for active probes"]
-    G["192.168.4.46 continues generating or propagating monitor results<br/>Large number of 'from 192.168.4.46: no route' results"]
-    H["GTM VS / Pool / Wide IP states turn red<br/>DNS response ratio declines for the first time"]
-    I["22:16:02 reboot<br/>Physical link actually goes down"]
-    J["22:19–22:20 partial recovery after reboot<br/>Link / CMI / iQuery recover first, but Force Offline remains<br/>OSPF is not yet FULL"]
-    K["Control plane has recovered, but routing has not<br/>A second wave of 'no route' errors and a second response-ratio decline"]
-    L["22:25:03 Release Force Offline<br/>22:25:11 OSPF FULL<br/>22:25:33–22:25:37 services return from red to green"]
-
-    A --> B --> D --> F
-    A --> C --> E --> F
-    F --> G --> H --> I --> J --> K --> L
-```
+![Figure 5: Failure mechanism showing how Force Offline on a Standby DNS appliance contaminated GTM health-check state](./assets/fault-mechanism.png)
 
 At this point, the first drop in service response was largely explained:
 
@@ -707,23 +617,7 @@ This step illustrates the investigative method used throughout the incident:
 
 **Figure 6. Evidence escalation and hypothesis revision throughout the investigation**
 
-```mermaid
-flowchart TD
-    A["Starting point: a paradox<br/>The maintained appliance was Standby, so why did the overall DNS response ratio decline?"]
-    B["Round 1: Confirm the architecture<br/>Four WE-DNS appliances / two HA pairs; Anycast 192.168.4.254;<br/>cross-data-center GTM sync + OSPF"]
-    C["Round 2: Review the service graph<br/>Grafana shows two troughs, so the anomaly did not occur only during reboot"]
-    D["Round 3: Corroborate across devices<br/>Four F5 logs + Cisco DCI logs;<br/>'no route' predates reboot, and OSPF DOWN predates the physical-link failure"]
-    E["Hypothesis Revision 1<br/>From 'the reboot caused the incident' to<br/>'Force Offline triggered the routing anomaly first'"]
-    F["Round 4: Explain the contradictory states<br/>MyF5 + TAC: Force Offline affects dynamic routing;<br/>gtmd/big3d do not stop automatically; Auto Last Hop still returns iQuery"]
-    G["Hypothesis Revision 2<br/>Identify the partial-failure / asymmetric perspective;<br/>explain both response-ratio declines"]
-    H["Round 5: Quantify impact<br/>Analyze GTM red/green logs and inventory affected VS / Pool / Wide IP objects"]
-    I["Round 6: Ask why probing appears to cross data centers<br/>Reason field suggests prober selection;<br/>vendor notes that Reason is not final proof"]
-    J["Evidence escalation<br/>Packet capture + gtm.debugprobelogging + big3d/gtmd debug + qkview<br/>directly confirm source, destination, and port"]
-    K["Hypothesis Revision 3<br/>10.191.88.14:4353 is not an ordinary tcp_half monitor;<br/>the object was set to product bigip + /Common/bigip,<br/>creating iQuery/big3d-related traffic"]
-    L["Verifiable conclusions and remediation<br/>Avoid Force Offline before a straightforward reboot; add a TMM static default route;<br/>evaluate Prober Pool / Cisco protection; correct the misclassified Server type"]
-
-    A --> B --> C --> D --> E --> F --> G --> H --> I --> J --> K --> L
-```
+![Figure 6: Evidence escalation and hypothesis revision throughout the investigation](./assets/investigation-path.png)
 
 #### First Revision
 

@@ -2,7 +2,7 @@
 title: "F5 BIG-IP DNS Incident Retrospective: Why Force Offline on a Standby Node Degraded GTM"
 published: 2026-08-18
 description: "An evidence-driven reconstruction of how Force Offline on a Standby F5 DNS node disrupted OSPF while GTM monitoring remained active, causing two waves of DNS degradation."
-image: ""
+image: "./cover-dns-incident.webp"
 tags: [F5 BIG-IP, BIG-IP DNS, GTM, OSPF, Anycast DNS, Incident Response]
 category: Incident Response
 lang: en
