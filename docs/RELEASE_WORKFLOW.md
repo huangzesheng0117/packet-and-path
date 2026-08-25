@@ -10,12 +10,12 @@
 | GitHub 远端 | `origin` → `huangzesheng0117/Firefly` | 个人源代码仓库 |
 | 上游远端 | `upstream` → `CuteLeaf/Firefly` | 只用于同步框架，不用于本站发布 |
 | 生产分支 | `master` | GitHub 与生产发布基线 |
-| 版本 01 | `blog-version-01` | 当前现网版本的可读分支名 |
-| 版本 02 | `blog-version-02` | 本地设计与迭代分支 |
+| 版本 01 | `blog-version-01` | 从旧电脑迁入的本地维护环境 |
+| 版本 02 | `blog-version-02` | 与当前线上内容对齐的可读分支 |
 | Cloudflare Worker | `firefly` | 托管 `dist/` 静态资产 |
 | 正式域名 | `https://next-hop.tech/`、`https://www.next-hop.tech/` | 发布后必须同时验证 |
 
-当前版本 01、版本 02 和 `master` 内容一致，但三个分支仍然保留。以后是否继续保持一致，必须以用户当次发布要求为准。
+2026-08-25 内容对齐时，本地版本 01、版本 02 和 `master` 共同位于 `eb145998…`，并包含中英文 F5 BIG-IP DNS 故障复盘。此后仅本地文档维护提交可以使版本 02 的分支尖端超前，但不改变其与线上一致的站点源代码基线。`origin/blog-version-02` 仍位于 `6ef2389…`，因为本地快进或文档提交都不构成 GitHub 推送授权。以后是否继续保持一致，必须以用户当次发布要求和实际 Git 输出为准。
 
 ## 2. 发布授权边界
 
@@ -102,20 +102,27 @@ git status -sb
 $releaseCommit = git rev-parse HEAD
 ```
 
-当用户要求“把当前版本 02 发布为现网，并让版本 01 与版本 02 一致”时，在 `blog-version-02` 上执行：
+普通线上发布应让生产基线 `master` 与线上对齐分支 `blog-version-02` 指向发布提交。若当前就在 `blog-version-02`，只需移动 `master`：
 
 ```powershell
 git branch -f master $releaseCommit
+```
+
+若发布提交在其他分支，并且已经确认 `blog-version-02` 可以安全快进，再同步版本 02。不得用 `-f` 掩盖非快进历史：
+
+```powershell
+git switch blog-version-02
+git merge --ff-only $releaseCommit
+git branch -f master $releaseCommit
+```
+
+只有用户明确要求本地版本 01 也保持完全一致时，才同步它：
+
+```powershell
 git branch -f blog-version-01 $releaseCommit
 ```
 
-此时当前的 `blog-version-02` 已经指向 `$releaseCommit`，不需要重复移动它。
-
-当用户要求保留版本 02 为实验版本、只发布另一个指定版本时：
-
-- 只把 `master` 和 `blog-version-01` 指向明确选定的发布提交。
-- 不移动 `blog-version-02`。
-- 在发布总结中明确三个分支是否一致。
+在发布总结中明确三个本地分支及远端分支是否一致。本地同步、GitHub 推送和 Cloudflare 部署是三项独立授权。
 
 同步后核对：
 
@@ -127,13 +134,19 @@ git rev-parse blog-version-02
 
 ### 3.6 原子推送 GitHub
 
-当三个版本分支都需要同步时：
+正常发布只推送生产基线与线上对齐分支：
+
+```powershell
+git push --atomic origin master blog-version-02
+```
+
+只有用户明确要求远端版本 01 也同步时，才推送三个分支：
 
 ```powershell
 git push --atomic origin master blog-version-01 blog-version-02
 ```
 
-推送后核对远端：
+推送后只核对本次实际推送的远端；三分支同步时示例为：
 
 ```powershell
 git ls-remote --heads origin master blog-version-01 blog-version-02

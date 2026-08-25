@@ -129,7 +129,7 @@ If you have useful features and optimizations, please submit a [Pull Request](ht
    ```bash
    pnpm dev
    ```
-   Blog will be available at `http://localhost:4321`
+   This project will be available at `http://127.0.0.1:5173`
 
 ### Platform Hosting Deployment
 - **Refer to the [official guide](https://docs.astro.build/en/guides/deploy/) to deploy your blog to Vercel, Netlify, Cloudflare Pages, EdgeOne Pages, etc.**
@@ -255,7 +255,7 @@ All commands need to be executed in the project root directory:
 | Command                    | Action                                              |
 |:---------------------------|:----------------------------------------------------|
 | `pnpm install`             | Install dependencies                                |
-| `pnpm dev`                 | Start local development server at `localhost:4321`  |
+| `pnpm dev`                 | Start local development server at `127.0.0.1:5173`  |
 | `pnpm build`               | Build site to `./dist/`                             |
 | `pnpm preview`             | Preview built site locally                          |
 | `pnpm check`               | Check for errors in code                            |

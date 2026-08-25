@@ -13,7 +13,7 @@ Use `pnpm`; the `preinstall` script enforces it.
 - `pnpm type-check`: run TypeScript with `--noEmit`.
 - `pnpm format`: format `src` with Biome.
 - `pnpm lint`: run Biome checks and safe fixes on `src`.
-- `pnpm build`: generate icons, LQIPs, the Astro build, font subsets, and Pagefind search output in `dist`.
+- `pnpm build`: generate LQIPs, build the Astro site, subset fonts, and generate Pagefind search output in `dist`.
 - `pnpm preview`: preview the production build locally.
 - `pnpm new-post`: scaffold a new content post.
 
@@ -35,7 +35,7 @@ Use Conventional Commits, matching the current history: `feat: ...`, `fix: ...`,
 
 - A GitHub-only request does not authorize a Cloudflare production deployment.
 - A normal direct release to the personal `origin` uses `git`; it does not require a PR or GitHub CLI unless the user explicitly asks for a PR.
-- Preserve the meanings of `master`, `blog-version-01`, and `blog-version-02`; only make versions 01 and 02 identical when the user requests that release state.
+- Preserve the meanings of `master` (production release), `blog-version-01` (local maintenance), and `blog-version-02` (online-aligned content); only move or synchronize a version branch when the user requests that state.
 - Never deploy from stale `dist/` output, never push mixed or unreviewed changes, and never publish secrets or private case material.
 
 ## Security & Configuration Tips

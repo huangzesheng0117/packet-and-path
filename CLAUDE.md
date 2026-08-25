@@ -4,14 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Firefly is a feature-rich static blog theme built on **Astro 6** with **Svelte 5** for interactive components. It's a fork of [Fuwari](https://github.com/saicaca/fuwari) extended with extensive features. Primary language is Chinese (Simplified) with i18n for en, zh_TW, ja, ru.
+Packet & Path is a customized Firefly 6.15.0 static blog built on **Astro 7.0.7** with **Svelte 5** interactive islands. It is based on the Firefly/Fuwari theme family and uses English as the configured default UI, with same-route Simplified Chinese switching and additional upstream locale support where configured.
 
 ## Commands
 
 | Command | Purpose |
 |---|---|
-| `pnpm dev` | Dev server at `localhost:4321` |
-| `pnpm build` | Production build (icons → LQIPs → Astro build → Pagefind indexing) |
+| `pnpm dev` | Dev server at `127.0.0.1:5173` |
+| `pnpm build` | Production build (LQIPs → Astro → font subsets → Pagefind) |
 | `pnpm preview` | Preview production build |
 | `pnpm check` | `astro check` for type/error checking |
 | `pnpm type-check` | `tsc --noEmit --isolatedDeclarations` |
@@ -55,7 +55,7 @@ Defined in `src/content.config.ts`:
 - `src/i18n/` — translation keys in `i18nKey.ts`, language files in `languages/*.ts`, lookup via `translation.ts`
 - `src/utils/` — content sorting, crypto (encrypted posts), date formatting, image processing/LQIP, TOC generation
 - `src/pages/` — Astro file-based routing
-- `scripts/` — build-time utilities (`generate-icons.js`, `generate-lqips.ts`, `new-post.js`)
+- `scripts/` — build-time and maintenance utilities (`generate-lqips.ts`, `subset-fonts.ts`, `new-post.js`, and PowerShell helpers)
 
 ### Path Aliases (tsconfig.json)
 
@@ -69,13 +69,12 @@ Defined in `src/content.config.ts`:
 
 ## Build Pipeline
 
-Multi-step: `scripts/generate-icons.js` → `scripts/generate-lqips.ts` → `astro build` → `pagefind --site dist`
+Multi-step: `scripts/generate-lqips.ts` → `astro build` → `scripts/subset-fonts.ts` → `pagefind --site dist`
 
-Icons/LQIP data are generated into `src/constants/` and committed. Regenerate with `pnpm icons` or `pnpm lqips`.
+LQIP data is generated into `src/constants/lqips.json` and committed. Regenerate it with `pnpm lqips`; there is no `pnpm icons` script in this fork.
 
 ## Deployment
 
-- **Vercel** (default, `vercel.json`)
-- **Cloudflare Workers** (`wrangler.jsonc`, set `CF_WORKERS` env var)
+- **Cloudflare Workers** is the Packet & Path production target (`wrangler.jsonc`, Worker `firefly`).
+- `vercel.json` remains an upstream-compatible alternative configuration, not the current production path.
 - Static output to `dist/`
-

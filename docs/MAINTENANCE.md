@@ -10,8 +10,8 @@
 Windows 本地源码
     -> 本地预览和构建检查
     -> Git commit
-    -> Push 到个人 GitHub Fork 的 master 分支
-    -> Cloudflare 自动拉取、构建并部署
+    -> 按授权同步并推送 master 与线上对齐分支 blog-version-02
+    -> Wrangler dry run 和一次显式 Cloudflare Worker 部署
     -> https://www.next-hop.tech/ 生效
 ```
 
@@ -32,14 +32,16 @@ Windows 本地源码
 
 ```powershell
 Set-Location -LiteralPath 'D:\Projects\Personal Blog\website'
-git status
-git pull --ff-only origin master
+git status -sb
+git branch -vv
+git fetch origin --prune
+..\switch-blog-version.ps1 -Status
 ```
 
 要求：
 
 - `git status` 不应有来源不明的未提交文件。
-- 拉取远程最新代码后再修改，避免覆盖其他设备或 GitHub 网页产生的改动。
+- `fetch` 后先核对本地版本分支与远端 SHA，再决定在哪个版本环境修改；不要把 `pull origin master` 无条件合并进任意当前分支。
 - `Case` 目录是私有案例原始资料，不属于网站 Git 仓库，不能直接发布。
 
 ### 2.1 中英文双版本同步规则
@@ -311,7 +313,7 @@ pnpm dev
 浏览器打开：
 
 ```text
-http://localhost:5173
+http://127.0.0.1:5173/
 ```
 
 项目使用 `5173` 而不是 Astro 默认的 `4321`，因为本机 Windows 环境拒绝绑定 `4321`。
@@ -343,7 +345,7 @@ git status
 - `git status` 只显示本次预期修改。
 - 所有用户可见改动均已同时检查英文版和中文版，语言按钮、刷新持久化及文章正文切换结果一致。
 
-`pnpm type-check` 当前会命中 Firefly 上游模板已有的 TypeScript 6 类型问题，不能作为当前版本唯一的发布阻断条件；以 `pnpm check` 和实际生产构建为准。
+`pnpm type-check` 也是标准验证项。若它失败，必须记录本次实际错误并判断是否为已确认基线；不得沿用历史文档中的旧错误说明直接跳过。
 
 ## 8. 提交并推送 GitHub
 
@@ -434,14 +436,13 @@ GitHub 的 `master` 更新可能触发 Cloudflare 自动构建；Codex 的标准
 git log --oneline -10
 ```
 
-使用 `git revert` 创建安全的反向提交：
+使用 `git revert` 创建安全的反向提交，然后按统一发布流程同步应发布的分支：
 
 ```powershell
 git revert <错误提交的哈希>
-git push origin master
 ```
 
-Cloudflare 会自动部署回滚结果。不要用 `git reset --hard` 或强制推送破坏公开分支历史。
+不要只推送 `master` 而让线上对齐分支失真。按照 [`docs/RELEASE_WORKFLOW.md`](RELEASE_WORKFLOW.md) 完成验证、原子推送和 Cloudflare 回滚/部署；不要用 `git reset --hard` 或强制推送破坏公开分支历史。
 
 ## 11. Fork 与上游 Firefly
 
@@ -464,10 +465,9 @@ git log --oneline master..upstream/master
 git merge upstream/master
 pnpm check
 pnpm build
-git push origin master
 ```
 
-由于本项目已经修改配置和内容，上游合并可能产生冲突。不要配置无人值守的自动同步；应先审查上游变更，再合并和测试。
+由于本项目已经修改配置和内容，上游合并可能产生冲突。不要配置无人值守的自动同步；应先审查上游变更，再合并和测试，并按统一发布流程决定是否同步 `master`、`blog-version-02` 和本地版本 01。
 
 ## 12. 私有案例资料与脱敏
 

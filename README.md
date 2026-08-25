@@ -129,7 +129,7 @@
    ```bash
    pnpm dev
    ```
-   博客将在 `http://localhost:4321` 可用
+   本项目的博客将在 `http://127.0.0.1:5173` 可用
    
 ### 社区教程
 Cloudflare Workers 部署：[【不用服务器，无需备案，零成本搭建一个自己的个人博客】](https://www.bilibili.com/video/BV1hX9XBKEhm)
@@ -257,7 +257,7 @@ location: China # 位置
 | Command                    | Action                                 |
 | :------------------------- | :------------------------------------- |
 | `pnpm install`             | 安装依赖                               |
-| `pnpm dev`                 | 在 `localhost:4321` 启动本地开发服务器 |
+| `pnpm dev`                 | 在 `127.0.0.1:5173` 启动本地开发服务器 |
 | `pnpm build`               | 构建网站至 `./dist/`                   |
 | `pnpm preview`             | 本地预览已构建的网站                   |
 | `pnpm check`               | 检查代码中的错误                       |

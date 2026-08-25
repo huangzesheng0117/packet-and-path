@@ -3,11 +3,13 @@
 ## 动态组件
 
 - `widget/Dynamic.astro`：显示最新动态的侧边栏组件。
+- `widget/DynamicSidebar.svelte`：动态侧边栏的客户端交互视图。
 - `pages/dynamic/DynamicFeed.svelte`：负责动态 JSON 加载、搜索、年份筛选和分页。
 - `pages/dynamic/DynamicGallery.astro`：动态图片网格、轮播和灯箱。
 - `pages/dynamic/DynamicInlineComments.astro`：单条动态的按需评论区。
 - `pages/dynamic/DynamicItem.astro`：动态条目的服务端渲染组件。
 - `pages/dynamic/DynamicItemTemplate.astro`：动态条目的客户端渲染模板。
+- `pages/dynamic/dynamic-gallery.ts`、`dynamic-inline-comments.ts`：对应 Astro 组件使用的浏览器端逻辑。
 
 Firefly 项目中所有可复用组件的集中管理。组件按照功能和职责进行分类，提供清晰的架构和易于维护的代码组织。
 
@@ -21,11 +23,13 @@ Firefly 项目中所有可复用组件的集中管理。组件按照功能和职
 - `ConfigCarrier.astro` - 配置载体组件
 - `DropdownMenu.astro` - 下拉菜单组件
 - `Footer.astro` - 页脚组件
+- `HomeDataLayer.astro` - Packet & Path 首页数据层
 - `Navbar.astro` - 导航栏组件
 - `NavMenuPanel.astro` - 导航菜单面板
 - `PostCard.astro` - 文章卡片组件
 - `PostMeta.astro` - 文章元数据组件
 - `PostPage.astro` - 文章页面布局组件
+- `PostStats.astro` - 文章统计信息
 - `SideBar.astro` - 侧边栏组件
 
 ### 🎮 controls/ - 导航和交互控件
@@ -42,12 +46,9 @@ Firefly 项目中所有可复用组件的集中管理。组件按照功能和职
 - `ArchivePanel.astro` - 归档面板组件（服务端渲染 + 客户端筛选/折叠）
 
 **交互组件**
-- `DisplaySettings.svelte` - 显示设置组件
 - `DisplaySettingsIntegrated.svelte` - 集成显示设置组件
-- `LayoutSwitchButton.svelte` - 布局切换按钮
 - `LightDarkSwitch.svelte` - 主题切换组件
 - `Search.svelte` - 搜索功能组件
-- `WallpaperSwitch.svelte` - 壁纸模式切换组件
 
 ### 🔧 common/ - 公共可复用组件
 
@@ -93,14 +94,18 @@ Firefly 项目中所有可复用组件的集中管理。组件按照功能和职
 全局加载的功能增强和特效组件。
 
 **管理器（初始化和管理功能）**
+- `BackgroundPlayer.astro` - 全局背景播放与切换管理
 - `FancyboxManager.astro` - Fancybox 图片查看器管理
 - `FontSetup.astro` - 字体加载和管理（基于 Astro Font API）
+- `LanguageManager.astro` - 同路由中英文内容切换管理
 - `KatexManager.astro` - Katex 数学公式渲染管理
 - `MusicManager.astro` - 全局音乐播放管理器（单例，管理唯一 audio 元素和播放状态，通过 CustomEvent 同步所有 MusicPlayer 视图实例）
 
 **功能组件**
 - `EncryptedContent.astro` - 加密内容组件
 - `EncryptedPost.astro` - 加密文章组件
+- `HomeMotion.astro` - 首页基础动效
+- `HomeScrollStory.astro` - Packet & Path 五阶段滚动叙事
 - `Live2DWidget.astro` - Live2D 看板娘组件
 - `MusicPlayer.astro` - 音乐播放器 UI 视图控制器（纯 UI，委托 MusicManager 进行播放控制）
 - `SakuraEffect.astro` - 樱花飘落特效
@@ -113,9 +118,14 @@ Firefly 项目中所有可复用组件的集中管理。组件按照功能和职
 
 - `AdvancedSearch.svelte` - 高级搜索组件
 
+**pages/anime/** - 动漫展示页面组件
+- `AnimeCard.svelte` - 动漫卡片
+- `AnimeDetailModal.svelte` - 详情弹窗
+- `AnimeGrid.svelte` - 动漫网格
+
 **pages/bangumi/** - 番组计划页面组件
 - `BangumiGrid.svelte` - 番组网格布局组件
-- `BangumiSection.astro` - 番组分类展示组件
+- `BangumiSection.svelte` - 番组分类展示组件
 - `Card.svelte` - 番组卡片组件
 - `FilterControls.svelte` - 筛选控制组件
 - `TabNav.svelte` - 标签导航组件
