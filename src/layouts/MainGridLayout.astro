@@ -4,6 +4,7 @@ import Live2DWidget from "@components/features/Live2DWidget.astro";
 import Footer from "@components/layout/Footer.astro";
 import Navbar from "@components/layout/Navbar.astro";
 import SideBar from "@components/layout/SideBar.astro";
+import SidebarTOC from "@components/widget/SidebarTOC.astro";
 import type { MarkdownHeading } from "astro";
 import { Icon } from "astro-icon/components";
 import ImageWrapper from "@/components/common/ImageWrapper.astro";
@@ -197,6 +198,25 @@ const sidebarConfig = getResponsiveSidebarConfig();
 // 侧边栏是否在文章详情页显示（默认 true）
 const hideSidebarOnPostPage =
 	sidebarLayoutConfig.hideSidebarOnPostPage === true;
+
+// 专业版布局关闭了传统侧边栏，但文章页仍需要独立的左侧目录。
+// 如果以后重新启用并实际渲染配置式目录，则不再重复渲染外置目录。
+const configuredSidebarToc = sidebarLayoutConfig.rightComponents.find(
+	(component) => component.type === "sidebarToc",
+);
+const rightSidebarCanRenderOnPost =
+	sidebarLayoutConfig.position === "right" ||
+	sidebarLayoutConfig.position === "both" ||
+	(sidebarLayoutConfig.position === "left" &&
+		sidebarLayoutConfig.showBothSidebarsOnPostPage === true);
+const hasConfiguredPostToc =
+	sidebarLayoutConfig.enable &&
+	!hideSidebarOnPostPage &&
+	rightSidebarCanRenderOnPost &&
+	configuredSidebarToc?.enable === true &&
+	configuredSidebarToc.showOnPostPage !== false;
+const shouldRenderArticleTocRail =
+	isPostPage && headings.length > 0 && !hasConfiguredPostToc;
 
 // 在文章页面且启用了showBothSidebarsOnPostPage时，确保对侧组件参与网格计算
 const shouldShowBothSidebarsOnPostPage: boolean =
@@ -834,7 +854,12 @@ const hasMultipleImages =
 <!-- Main content -->
 <div class={`absolute w-full z-30 pointer-events-none ${mobileNonHomeBannerClass ? 'mobile-main-no-banner' : ''} ${!(isBannerMode && isBackgroundEnabled) ? 'no-banner-layout' : ''}`} style={isFullscreenMode ? 'top: 0;' : `top: ${finalMainPanelTop}`}>
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
-    <div class="relative w-full xl:w-[92vw] max-w-(--page-width) mx-auto pointer-events-auto">
+    <div
+        class:list={[
+            "relative w-full xl:w-[92vw] max-w-(--page-width) mx-auto pointer-events-auto",
+            shouldRenderArticleTocRail ? "article-toc-layout" : "",
+        ]}
+    >
         <div id="main-grid"
           class={`transition duration-700 w-full left-0 right-0 grid ${gridCols} grid-rows-[auto_1fr_auto] lg:grid-rows-[auto] mx-auto gap-4 px-2 md:px-4 ${!sidebarConfig.mobileShowSidebar ? 'mobile-no-sidebar' : ''}`}
           data-sidebar-enable={sidebarLayoutConfig.enable ? "true" : "false"}
@@ -937,6 +962,23 @@ const hasMultipleImages =
             </div>
         </div>
 
+        {shouldRenderArticleTocRail && (
+            <aside
+                id="article-toc-rail"
+                class="article-toc-rail"
+                aria-label={i18n(I18nKey.tableOfContents)}
+            >
+                <div class="article-toc-rail__sticky">
+                    <SidebarTOC
+                        headings={headings}
+                        headingTranslations={headingTranslations}
+                        encrypted={encrypted}
+                        class="article-toc-card"
+                    />
+                </div>
+            </aside>
+        )}
+
         {live2dWidgetConfig.enable && <Live2DWidget config={live2dWidgetConfig} />}
     </div>
 </div>
@@ -948,6 +990,81 @@ const hasMultipleImages =
   #right-sidebar {
     transition: opacity 0.35s ease-in-out,
                 transform 0.35s ease-in-out;
+  }
+
+  /*
+   * 宽屏文章页把“目录 + 正文”作为一个整体居中：正文向右平移，释放左侧空间给目录。
+   * 正文、封面与页脚自身宽度保持不变；112rem 以下恢复原居中布局并隐藏目录。
+   */
+  .article-toc-layout {
+    --article-toc-gap: 1.25rem;
+    --article-toc-width: clamp(20rem, 20vw, 24rem);
+    --article-layout-shift: clamp(10.625rem, calc(10vw + 0.625rem), 12.625rem);
+  }
+
+  .article-toc-rail {
+    position: absolute;
+    inset-block: 0;
+    right: calc(100% + var(--article-toc-gap));
+    width: var(--article-toc-width);
+    display: none;
+    pointer-events: none;
+  }
+
+  .article-toc-rail__sticky {
+    position: sticky;
+    top: 1.25rem;
+    max-height: calc(100vh - 2.5rem);
+    pointer-events: auto;
+  }
+
+  .article-toc-card {
+    display: block;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--professional-border) 82%, transparent);
+    background: color-mix(in srgb, var(--card-bg) 96%, transparent);
+    box-shadow: 0 18px 48px -36px rgba(15, 23, 42, 0.38);
+  }
+
+  .article-toc-card .widget-title {
+    font-family: var(--professional-font);
+    letter-spacing: -0.015em;
+  }
+
+  .article-toc-card .toc-scroll-container {
+    max-height: calc(100vh - 9rem);
+  }
+
+  .article-toc-card .toc-item {
+    align-items: flex-start;
+  }
+
+  .article-toc-card .toc-badge {
+    margin-top: 0.05rem;
+  }
+
+  .article-toc-card .toc-label {
+    max-width: none;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  @media (min-width: 112rem) {
+    .article-toc-layout {
+      transform: translateX(var(--article-layout-shift));
+    }
+
+    .article-toc-rail {
+      display: block;
+    }
+  }
+
+  @media print {
+    .article-toc-rail {
+      display: none !important;
+    }
   }
 
   @keyframes swupFadeOut {

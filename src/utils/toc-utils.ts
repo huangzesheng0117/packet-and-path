@@ -23,6 +23,8 @@ export class TOCManager {
 	private observer: IntersectionObserver | null = null;
 	private maxLevel: number;
 	private scrollTimeout: number | null = null;
+	private scrollListener: (() => void) | null = null;
+	private scrollAnimationFrame: number | null = null;
 	private contentId: string;
 	private indicatorId: string;
 	private scrollOffset: number;
@@ -53,17 +55,38 @@ export class TOCManager {
 		if (!contentContainer) {
 			return [];
 		}
-		return Array.from(
-			contentContainer.querySelectorAll("h1, h2, h3, h4, h5, h6"),
+
+		const headings = Array.from(
+			contentContainer.querySelectorAll("h2, h3, h4, h5, h6"),
+		) as HTMLElement[];
+		const hasBilingualContent = contentContainer.querySelector(
+			".language-content--en, .language-content--zh",
 		);
+
+		if (!hasBilingualContent) return headings;
+
+		const activeLanguageClass =
+			document.documentElement.dataset.siteLang === "zh-CN"
+				? "language-content--zh"
+				: "language-content--en";
+
+		return headings.filter((heading) => {
+			const languageContainer = heading.closest(
+				".language-content--en, .language-content--zh",
+			);
+			return (
+				!languageContainer ||
+				languageContainer.classList.contains(activeLanguageClass)
+			);
+		});
 	}
 
 	/**
-	 * 获取标题的纯文本内容（排除 script/style 标签的文本）
+	 * 获取标题的纯文本内容（排除脚本、样式和自动锚点符号）
 	 */
 	private getCleanTextContent(element: HTMLElement): string {
 		const clone = element.cloneNode(true) as HTMLElement;
-		for (const el of clone.querySelectorAll("script, style")) {
+		for (const el of clone.querySelectorAll("script, style, .anchor")) {
 			el.remove();
 		}
 		return clone.textContent || "";
@@ -149,42 +172,21 @@ export class TOCManager {
 	 */
 	private getVisibleHeadingIds(): string[] {
 		const headings = this.getAllHeadings();
-		const visibleHeadingIds: string[] = [];
+		if (headings.length === 0) return [];
 
-		headings.forEach((heading) => {
-			if (heading.id) {
-				const rect = heading.getBoundingClientRect();
-				const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+		const activationLine = this.scrollOffset + 12;
+		let activeHeading = headings.find((heading) => Boolean(heading.id)) ?? null;
 
-				if (isVisible) {
-					visibleHeadingIds.push(heading.id);
-				}
+		for (const heading of headings) {
+			if (!heading.id) continue;
+			if (heading.getBoundingClientRect().top <= activationLine) {
+				activeHeading = heading;
+				continue;
 			}
-		});
-
-		// 如果没有可见标题，选择最接近屏幕顶部的标题
-		if (visibleHeadingIds.length === 0 && headings.length > 0) {
-			let closestHeading: string | null = null;
-			let minDistance = Number.POSITIVE_INFINITY;
-
-			headings.forEach((heading) => {
-				if (heading.id) {
-					const rect = heading.getBoundingClientRect();
-					const distance = Math.abs(rect.top);
-
-					if (distance < minDistance) {
-						minDistance = distance;
-						closestHeading = heading.id;
-					}
-				}
-			});
-
-			if (closestHeading) {
-				visibleHeadingIds.push(closestHeading);
-			}
+			break;
 		}
 
-		return visibleHeadingIds;
+		return activeHeading?.id ? [activeHeading.id] : [];
 	}
 
 	/**
@@ -309,11 +311,20 @@ export class TOCManager {
 				targetElement.getBoundingClientRect().top +
 				window.pageYOffset -
 				this.scrollOffset;
+			const prefersReducedMotion = window.matchMedia(
+				"(prefers-reduced-motion: reduce)",
+			).matches;
 
 			window.scrollTo({
 				top: targetTop,
-				behavior: "smooth",
+				behavior: prefersReducedMotion ? "auto" : "smooth",
 			});
+
+			history.replaceState(null, "", `#${encodeURIComponent(id)}`);
+			window.setTimeout(
+				() => this.updateActiveState(),
+				prefersReducedMotion ? 0 : 650,
+			);
 		}
 	}
 
@@ -332,7 +343,7 @@ export class TOCManager {
 				this.updateActiveState();
 			},
 			{
-				rootMargin: "0px 0px 0px 0px",
+				rootMargin: `-${this.scrollOffset}px 0px -70% 0px`,
 				threshold: 0,
 			},
 		);
@@ -342,6 +353,23 @@ export class TOCManager {
 				this.observer?.observe(heading);
 			}
 		});
+
+		if (this.scrollListener) {
+			window.removeEventListener("scroll", this.scrollListener);
+		}
+		if (this.scrollAnimationFrame !== null) {
+			window.cancelAnimationFrame(this.scrollAnimationFrame);
+			this.scrollAnimationFrame = null;
+		}
+
+		this.scrollListener = () => {
+			if (this.scrollAnimationFrame !== null) return;
+			this.scrollAnimationFrame = window.requestAnimationFrame(() => {
+				this.scrollAnimationFrame = null;
+				this.updateActiveState();
+			});
+		};
+		window.addEventListener("scroll", this.scrollListener, { passive: true });
 	}
 
 	/**
@@ -364,6 +392,14 @@ export class TOCManager {
 		if (this.scrollTimeout) {
 			clearTimeout(this.scrollTimeout);
 			this.scrollTimeout = null;
+		}
+		if (this.scrollListener) {
+			window.removeEventListener("scroll", this.scrollListener);
+			this.scrollListener = null;
+		}
+		if (this.scrollAnimationFrame !== null) {
+			window.cancelAnimationFrame(this.scrollAnimationFrame);
+			this.scrollAnimationFrame = null;
 		}
 	}
 

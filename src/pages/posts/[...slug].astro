@@ -77,16 +77,31 @@ const EnglishArticleContent = bilingualArticle?.Content ?? Content;
 const englishArticleHeadings = bilingualArticle
 	? bilingualArticle.getHeadings()
 	: [];
+const cleanTocHeadingText = (text: string) =>
+	text.replace(/#+\s*$/, "").trim();
+// 页面卡片已经显示文章标题，目录从正文 h2 开始，避免重复列出文章 h1。
+const tocHeadingIndexes = headings.reduce<number[]>((indexes, heading, index) => {
+	if (heading.depth >= 2) indexes.push(index);
+	return indexes;
+}, []);
 const tocHeadings = isBilingualArticle
-	? headings.map((heading, index) => ({
-			...heading,
-			text: englishArticleHeadings[index]?.text || heading.text,
+	? tocHeadingIndexes.map((index) => ({
+			...headings[index],
+			slug: englishArticleHeadings[index]?.slug || headings[index].slug,
+			text: cleanTocHeadingText(
+				englishArticleHeadings[index]?.text || headings[index].text,
+			),
 		}))
-	: headings;
+	: tocHeadingIndexes.map((index) => ({
+			...headings[index],
+			text: cleanTocHeadingText(headings[index].text),
+		}));
 const headingTranslations = isBilingualArticle
-	? headings.map((heading, index) => ({
-			en: englishArticleHeadings[index]?.text || heading.text,
-			zh: heading.text,
+	? tocHeadingIndexes.map((index) => ({
+			en: cleanTocHeadingText(
+				englishArticleHeadings[index]?.text || headings[index].text,
+			),
+			zh: cleanTocHeadingText(headings[index].text),
 		}))
 	: [];
 
@@ -665,26 +680,64 @@ const relatedPosts = await getRelatedPosts(entry, 5);
 {
   isBilingualArticle && (
     <script is:inline>
-      {`
-        (function syncBilingualArticleHeadingIds() {
-          function syncIds() {
-            var englishHeadings = document.querySelectorAll(
-              ".language-content--en h1, .language-content--en h2, .language-content--en h3, .language-content--en h4, .language-content--en h5, .language-content--en h6"
-            );
-            var chineseHeadings = document.querySelectorAll(
-              ".language-content--zh h1, .language-content--zh h2, .language-content--zh h3, .language-content--zh h4, .language-content--zh h5, .language-content--zh h6"
-            );
-            englishHeadings.forEach(function assignChineseId(heading, index) {
-              if (chineseHeadings[index] && chineseHeadings[index].id) {
-                heading.id = chineseHeadings[index].id;
-              }
-            });
+      (function manageBilingualArticleHeadingIds() {
+        function restoreHashTarget() {
+          if (!window.location.hash) return;
+
+          var targetId;
+          try {
+            targetId = decodeURIComponent(window.location.hash.slice(1));
+          } catch (_error) {
+            return;
           }
-          syncIds();
-          document.addEventListener("swup:contentReplaced", syncIds);
-          document.addEventListener("astro:page-load", syncIds);
-        })();
-      `}
+
+          window.requestAnimationFrame(function scrollToRestoredHeading() {
+            var target = document.getElementById(targetId);
+            if (target) target.scrollIntoView({ block: "start", behavior: "auto" });
+          });
+        }
+
+        function syncIds(restoreHash) {
+          var englishHeadings = document.querySelectorAll(
+            ".language-content--en h1, .language-content--en h2, .language-content--en h3, .language-content--en h4, .language-content--en h5, .language-content--en h6"
+          );
+          var chineseHeadings = document.querySelectorAll(
+            ".language-content--zh h1, .language-content--zh h2, .language-content--zh h3, .language-content--zh h4, .language-content--zh h5, .language-content--zh h6"
+          );
+          var isChinese = document.documentElement.dataset.siteLang === "zh-CN";
+
+          englishHeadings.forEach(function assignActiveHeadingId(heading, index) {
+            var chineseHeading = chineseHeadings[index];
+            if (!chineseHeading) return;
+
+            var canonicalId = heading.dataset.tocCanonicalId || heading.id || chineseHeading.id;
+            if (!canonicalId) return;
+
+            heading.dataset.tocCanonicalId = canonicalId;
+            chineseHeading.dataset.tocCanonicalId = canonicalId;
+            if (isChinese) {
+              heading.removeAttribute("id");
+              chineseHeading.id = canonicalId;
+            } else {
+              chineseHeading.removeAttribute("id");
+              heading.id = canonicalId;
+            }
+          });
+
+          if (restoreHash) restoreHashTarget();
+        }
+
+        syncIds(true);
+        document.addEventListener("site-language-change", function onLanguageChange() {
+          syncIds(true);
+        });
+        document.addEventListener("swup:contentReplaced", function onContentReplaced() {
+          syncIds(true);
+        });
+        document.addEventListener("astro:page-load", function onPageLoad() {
+          syncIds(true);
+        });
+      })();
     </script>
   )
 }

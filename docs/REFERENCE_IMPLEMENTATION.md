@@ -51,6 +51,8 @@
 | `src/styles/professional.css` | 首页、内容页、动画、字体和响应式规则 |
 | `src/layouts/Layout.astro` | 全局专业样式导入和首屏导航字体预加载 |
 | `src/pages/posts/index.astro` | 独立文章列表页及其专业页头 |
+| `src/components/widget/SidebarTOC.astro` | 文章页左侧目录、双语章节文字和目录交互入口 |
+| `src/utils/toc-utils.ts` | 当前章节判定、锚点跳转和目录状态管理 |
 | `src/config/navBarConfig.ts` | 导航入口和文章子菜单 |
 | `src/config/siteConfig.ts` | 亮色主题、页面宽度和分类导航等全局设置 |
 | `src/config/backgroundWallpaper.ts` | 关闭旧主题壁纸与播放器 |
@@ -171,6 +173,18 @@ node -e "const fs=require('fs');const subsetFont=require('subset-font');(async()
 如果只修改文章排版，应优先调整
 `body:not(.is-home) .custom-md` 及其标题规则，不要修改首页 Hero 字号。
 
+### 7.1 文章左侧目录
+
+文章页在宽度不小于 `112rem` 时，会把“目录 + 正文”作为一个整体居中：正文保持
+原宽度并向右平移，左侧目录使用 `20rem` 至 `24rem` 的独立空间，因此不会压缩
+封面、正文或页脚。长章节名在目录中自动换行并完整显示。目录从正文 `h2` 开始，
+显示三级层次；滚动时仅高亮当前章节，点击后平滑滚动并更新 URL 锚点。空间不足及
+打印时恢复正文居中并隐藏目录，避免覆盖正文。
+
+中英文文章共用一组稳定的英文锚点。语言切换时，锚点只分配给当前可见语言的
+标题节点，隐藏语言不保留重复 `id`；修改双语文章结构时必须继续保持两种语言的
+标题数量和层级一致。
+
 ## 8. 已关闭或删除的旧主题功能
 
 为满足“只保留主页、文章、关于”的要求，本次关闭或移除了：
@@ -178,7 +192,7 @@ node -e "const fs=require('fs');const subsetFont=require('subset-font');(async()
 - 横幅/全屏壁纸模式和背景视频播放器。
 - 主题色、布局、卡片、壁纸、波纹、渐变、轮播和樱花切换。
 - 导航栏和侧边栏音乐播放器。
-- 桌面与移动端侧边栏。
+- 桌面与移动端通用侧边栏；文章页左侧独立目录不属于这套旧侧边栏。
 - Spine 模型与右侧悬浮控制按钮。
 - 页脚 RSS 和 Sitemap 文本入口。
 - 首页旧 Logo、“Packet & Path”图标卡片、说明文字、CTA 按钮和拓扑动图。

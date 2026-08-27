@@ -75,7 +75,7 @@ The build still reports a non-fatal large-chunk advisory and Pagefind skips ten 
 
 | Remote | URL | Purpose |
 |---|---|---|
-| `origin` | `https://github.com/huangzesheng0117/Firefly.git` | Personal source repository and production release source. |
+| `origin` | `https://github.com/huangzesheng0117/packet-and-path.git` | Personal source repository and production release source. |
 | `upstream` | `https://github.com/CuteLeaf/Firefly.git` | Read-only framework source; never publish Packet & Path content here. |
 
 ## Known Follow-ups

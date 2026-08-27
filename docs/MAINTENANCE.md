@@ -20,7 +20,7 @@ Windows 本地源码
 | 位置 | 职责 |
 |---|---|
 | `D:\Projects\Personal Blog\website` | 日常修改、预览和验证的主要入口。 |
-| `https://github.com/huangzesheng0117/Firefly` | 个人博客源码中心和版本历史。 |
+| `https://github.com/huangzesheng0117/packet-and-path` | 个人博客源码中心和版本历史。 |
 | Cloudflare Workers | 自动构建和发布，不作为日常页面编辑入口。 |
 | `https://next-hop.tech/`、`https://www.next-hop.tech/` | 面向访问者的正式网站，均绑定到 `firefly` Worker。 |
 
@@ -449,7 +449,7 @@ git revert <错误提交的哈希>
 本项目有两个 Git 远程：
 
 ```text
-origin   https://github.com/huangzesheng0117/Firefly.git
+origin   https://github.com/huangzesheng0117/packet-and-path.git
 upstream https://github.com/CuteLeaf/Firefly.git
 ```
 

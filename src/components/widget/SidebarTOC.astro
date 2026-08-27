@@ -154,6 +154,11 @@ const translationsByHeadingId = new Map(
     setTimeout(initSidebarTOC, 100);
   });
 
+  // 中英文正文使用同一路由。语言切换后重新绑定当前可见正文的标题节点。
+  document.addEventListener("site-language-change", () => {
+    setTimeout(initSidebarTOC, 0);
+  });
+
   // 浏览器导航事件
   window.addEventListener("popstate", () => {
     setTimeout(initSidebarTOC, 200);

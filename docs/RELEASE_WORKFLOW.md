@@ -7,7 +7,7 @@
 | 对象 | 固定值 | 用途 |
 |---|---|---|
 | 本地仓库 | `D:\Projects\Personal Blog\website` | 所有 Git、构建和 Wrangler 命令的工作目录 |
-| GitHub 远端 | `origin` → `huangzesheng0117/Firefly` | 个人源代码仓库 |
+| GitHub 远端 | `origin` → `huangzesheng0117/packet-and-path` | 个人源代码仓库 |
 | 上游远端 | `upstream` → `CuteLeaf/Firefly` | 只用于同步框架，不用于本站发布 |
 | 生产分支 | `master` | GitHub 与生产发布基线 |
 | 版本 01 | `blog-version-01` | 从旧电脑迁入的本地维护环境 |
