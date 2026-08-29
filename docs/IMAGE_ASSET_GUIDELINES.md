@@ -23,6 +23,7 @@ New article covers should reflect the subject of that specific article. New home
 | Article — Campus Office Network Deployment | `src/content/posts/campus-office-network-deployment/cover-network-deployment.webp` |
 | Article — IDC Edge Router Replacement | `src/content/posts/idc-edge-router-replacement/cover-edge-router.webp` |
 | Article — F5 BIG-IP DNS Incident Retrospective | `src/content/posts/f5-sh16-dns-force-offline-incident/cover-dns-incident.webp` |
+| Article — Cisco C9500 SVL Failover Incident | `src/content/posts/cisco-c9500-svl-failover-incident/cover-svl-failover.webp` |
 
 ## Pre-publish verification
 

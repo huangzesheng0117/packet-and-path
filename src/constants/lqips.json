@@ -84,5 +84,6 @@
   "src:content-locales/f5-sh16-dns-force-offline-incident/assets/grafana-response-ratio.png": "3e3e3239392f464536",
   "src:content-locales/f5-sh16-dns-force-offline-incident/assets/fault-mechanism.png": "efeae6ecebe7f0eeea",
   "src:content-locales/f5-sh16-dns-force-offline-incident/assets/anycast-dns-architecture.png": "eeedecf8f9f8f8f7f5",
-  "src:content/posts/f5-sh16-dns-force-offline-incident/cover-dns-incident.webp": "446965638b8f44605a"
+  "src:content/posts/f5-sh16-dns-force-offline-incident/cover-dns-incident.webp": "446965638b8f44605a",
+  "src:content/posts/cisco-c9500-svl-failover-incident/cover-svl-failover.webp": "0d2f4014212c041826"
 }

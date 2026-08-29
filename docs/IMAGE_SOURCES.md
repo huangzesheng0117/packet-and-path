@@ -12,10 +12,11 @@ as WebP files. The source pages were marked as free to use when downloaded.
 | `src/content/posts/campus-office-network-deployment/cover-network-deployment.webp` | Original AI-generated campus wiring-closet deployment scene | OpenAI image generation |
 | `src/content/posts/idc-edge-router-replacement/cover-edge-router.webp` | Original AI-generated redundant carrier-router commissioning scene | OpenAI image generation |
 | `src/content/posts/f5-sh16-dns-force-offline-incident/cover-dns-incident.webp` | [Close-up of Ethernet cables connected to network equipment](https://www.pexels.com/photo/close-up-photo-of-ethernet-cables-on-network-switch-6466143/) | Sergei Starostin |
+| `src/content/posts/cisco-c9500-svl-failover-incident/cover-svl-failover.webp` | Original AI-generated dual-switch StackWise Virtual failover and traffic-rerouting scene | OpenAI image generation |
 
 License reference: [Pexels License](https://www.pexels.com/license/).
 
-The three generated originals were created specifically for this site. Their prompts intentionally use different subjects, compositions, and lighting so they cannot be mistaken for one another or for the four Pexels-sourced assets. The untouched PNG originals remain in Codex generated-image storage; the repository contains optimized WebP derivatives.
+The four generated originals were created specifically for this site. Their prompts intentionally use different subjects, compositions, and lighting so they cannot be mistaken for one another or for the four Pexels-sourced assets. The untouched PNG originals remain in Codex generated-image storage; the repository contains optimized WebP derivatives.
 
 All active mappings and the no-reuse verification process are documented in `docs/IMAGE_ASSET_GUIDELINES.md`.
 

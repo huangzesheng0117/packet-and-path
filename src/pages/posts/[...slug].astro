@@ -41,6 +41,10 @@ import {
 	Content as F5DnsIncidentEnglishArticleContent,
 	getHeadings as getF5DnsIncidentEnglishArticleHeadings,
 } from "@/content-locales/f5-sh16-dns-force-offline-incident/index.en.md";
+import {
+	Content as C9500SvlIncidentEnglishArticleContent,
+	getHeadings as getC9500SvlIncidentEnglishArticleHeadings,
+} from "@/content-locales/cisco-c9500-svl-failover-incident/index.en.md";
 
 export async function getStaticPaths() {
 	const blogEntries = await getSortedPosts();
@@ -69,6 +73,10 @@ const bilingualArticles = {
 		Content: F5DnsIncidentEnglishArticleContent,
 		getHeadings: getF5DnsIncidentEnglishArticleHeadings,
 	},
+	"cisco-c9500-svl-failover-incident": {
+		Content: C9500SvlIncidentEnglishArticleContent,
+		getHeadings: getC9500SvlIncidentEnglishArticleHeadings,
+	},
 };
 const bilingualArticle =
 	bilingualArticles[entry.id as keyof typeof bilingualArticles];
@@ -77,13 +85,15 @@ const EnglishArticleContent = bilingualArticle?.Content ?? Content;
 const englishArticleHeadings = bilingualArticle
 	? bilingualArticle.getHeadings()
 	: [];
-const cleanTocHeadingText = (text: string) =>
-	text.replace(/#+\s*$/, "").trim();
+const cleanTocHeadingText = (text: string) => text.replace(/#+\s*$/, "").trim();
 // 页面卡片已经显示文章标题，目录从正文 h2 开始，避免重复列出文章 h1。
-const tocHeadingIndexes = headings.reduce<number[]>((indexes, heading, index) => {
-	if (heading.depth >= 2) indexes.push(index);
-	return indexes;
-}, []);
+const tocHeadingIndexes = headings.reduce<number[]>(
+	(indexes, heading, index) => {
+		if (heading.depth >= 2) indexes.push(index);
+		return indexes;
+	},
+	[],
+);
 const tocHeadings = isBilingualArticle
 	? tocHeadingIndexes.map((index) => ({
 			...headings[index],
