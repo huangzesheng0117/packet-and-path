@@ -993,13 +993,13 @@ const hasMultipleImages =
   }
 
   /*
-   * 宽屏文章页把“目录 + 正文”作为一个整体居中：正文向右平移，释放左侧空间给目录。
-   * 正文、封面与页脚自身宽度保持不变；112rem 以下恢复原居中布局并隐藏目录。
+   * 桌面文章页把“目录 + 正文”作为一个整体居中：正文向右平移，释放左侧空间给目录。
+   * 接近显示阈值时适度收窄正文以保留两侧安全边距；更宽的屏幕继续使用原页面宽度。
    */
   .article-toc-layout {
     --article-toc-gap: 1.25rem;
-    --article-toc-width: clamp(20rem, 20vw, 24rem);
-    --article-layout-shift: clamp(10.625rem, calc(10vw + 0.625rem), 12.625rem);
+    --article-toc-width: clamp(18rem, 18vw, 24rem);
+    --article-layout-shift: clamp(9.625rem, calc(9vw + 0.625rem), 12.625rem);
   }
 
   .article-toc-rail {
@@ -1051,8 +1051,10 @@ const hasMultipleImages =
     white-space: normal;
   }
 
-  @media (min-width: 112rem) {
+  @media (min-width: 90rem) {
     .article-toc-layout {
+      width: calc(100% - var(--article-toc-width) - var(--article-toc-gap) - 3rem);
+      max-width: var(--page-width);
       transform: translateX(var(--article-layout-shift));
     }
 
